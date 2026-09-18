@@ -1,0 +1,1342 @@
+[
+    {
+        "id": "72b54a41227aca2a",
+        "type": "tab",
+        "label": "Flow 15",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "71880a0dae56e60c",
+        "type": "inject",
+        "z": "72b54a41227aca2a",
+        "name": "Player 1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "P1",
+        "payloadType": "str",
+        "x": 240,
+        "y": 260,
+        "wires": [
+            [
+                "1abac244f86c819d"
+            ]
+        ]
+    },
+    {
+        "id": "e8c0a7a28700f12b",
+        "type": "inject",
+        "z": "72b54a41227aca2a",
+        "name": "Player 2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "P2",
+        "payloadType": "str",
+        "x": 240,
+        "y": 340,
+        "wires": [
+            [
+                "1abac244f86c819d"
+            ]
+        ]
+    },
+    {
+        "id": "6bc7271e3555ce6f",
+        "type": "inject",
+        "z": "72b54a41227aca2a",
+        "name": "Player 3",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "P3",
+        "payloadType": "str",
+        "x": 240,
+        "y": 420,
+        "wires": [
+            [
+                "1abac244f86c819d"
+            ]
+        ]
+    },
+    {
+        "id": "1abac244f86c819d",
+        "type": "switch",
+        "z": "72b54a41227aca2a",
+        "name": "Player Selector",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "P1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "P2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "P3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 460,
+        "y": 340,
+        "wires": [
+            [
+                "696d4cd71972b047",
+                "5e4fdb988cdc3300"
+            ],
+            [
+                "696d4cd71972b047",
+                "5e4fdb988cdc3300"
+            ],
+            [
+                "696d4cd71972b047",
+                "5e4fdb988cdc3300"
+            ]
+        ]
+    },
+    {
+        "id": "696d4cd71972b047",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "First Player Lock",
+        "func": "let locked = flow.get(\"roundLocked\") || false;\n\n// إذا لاعب سبق وضغط، تجاهل أي لاعب آخر\nif (locked === true) {\n    return null;\n}\n\n// أول لاعب فقط يتم تسجيله\nflow.set(\"roundLocked\", true);\n\nif (msg.payload === \"P1\") {\n    msg.payload = \"Player 1\";\n}\nelse if (msg.payload === \"P2\") {\n    msg.payload = \"Player 2\";\n}\nelse if (msg.payload === \"P3\") {\n    msg.payload = \"Player 3\";\n}\nelse {\n    return null;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 340,
+        "wires": [
+            [
+                "527dd499c13757c0",
+                "0f4f17d66b1e3b53",
+                "9c2bbb531a6be0c6",
+                "9beb1883642ad027"
+            ]
+        ]
+    },
+    {
+        "id": "6f270be948f2897e",
+        "type": "inject",
+        "z": "72b54a41227aca2a",
+        "name": "Reset Round",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "RESET",
+        "payloadType": "str",
+        "x": 250,
+        "y": 560,
+        "wires": [
+            [
+                "eda118db274e4d79"
+            ]
+        ]
+    },
+    {
+        "id": "eda118db274e4d79",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Reset Round Lock",
+        "func": "flow.set(\"roundLocked\", false);\n\nmsg.payload = \"Round Reset\";\nnode.warn(\"LOCK RESET = \" + flow.get(\"roundLocked\"));\nglobal.get\ncontext.get\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 560,
+        "wires": [
+            [
+                "e052088121fe5f35",
+                "97e14cca3ad9a8e0",
+                "7c7157e86b859c86"
+            ]
+        ]
+    },
+    {
+        "id": "527dd499c13757c0",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 29",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "7c7157e86b859c86",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "5e4fdb988cdc3300",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 32",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "de9fa5db48f6e96b",
+        "type": "mqtt in",
+        "z": "72b54a41227aca2a",
+        "name": "ESP32 Winner",
+        "topic": "quiz/winner",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c4575839817bb6d1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 160,
+        "wires": [
+            [
+                "35f8871f40d1d748",
+                "61e7867d2c2949f5"
+            ]
+        ]
+    },
+    {
+        "id": "35f8871f40d1d748",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Convert ESP32 Player",
+        "func": "let p = Number(msg.payload);\n\nif (p === 1) {\n    msg.payload = \"P1\";\n} else if (p === 2) {\n    msg.payload = \"P2\";\n} else if (p === 3) {\n    msg.payload = \"P3\";\n} else {\n    return null;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "696d4cd71972b047",
+                "e9d05f69d9f5670c"
+            ]
+        ]
+    },
+    {
+        "id": "2a21c38ba4936815",
+        "type": "mqtt out",
+        "z": "72b54a41227aca2a",
+        "name": "ESP32 Reset",
+        "topic": "quiz/reset",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c4575839817bb6d1",
+        "x": 1240,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "e052088121fe5f35",
+        "type": "change",
+        "z": "72b54a41227aca2a",
+        "name": "Set MQTT Reset",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "reset",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 620,
+        "wires": [
+            [
+                "2a21c38ba4936815"
+            ]
+        ]
+    },
+    {
+        "id": "0f4f17d66b1e3b53",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Update Scores",
+        "func": "let scores = flow.get(\"scores\") || {\n    P1: 0,\n    P2: 0,\n    P3: 0\n};\n\nif (msg.payload === \"Player 1\") {\n    scores.P1++;\n}\nelse if (msg.payload === \"Player 2\") {\n    scores.P2++;\n}\nelse if (msg.payload === \"Player 3\") {\n    scores.P3++;\n}\n\nflow.set(\"scores\", scores);\n\nmsg.payload = scores;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 300,
+        "wires": [
+            [
+                "190b2c798d01e8fe",
+                "96346da906edd097",
+                "6569064ea7fa08d9",
+                "db21b37b840bbb57"
+            ]
+        ]
+    },
+    {
+        "id": "96346da906edd097",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 33",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1680,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "190b2c798d01e8fe",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "name": "Player 1 Score",
+        "label": "Player 1 Score",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": true,
+        "className": "",
+        "value": "payload.P1",
+        "valueType": "msg",
+        "x": 1700,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "5e1c31f6c108fa2d",
+        "type": "http in",
+        "z": "72b54a41227aca2a",
+        "name": "Get Scores API",
+        "url": "/api/scores",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 1160,
+        "wires": [
+            [
+                "757966c62152c55a"
+            ]
+        ]
+    },
+    {
+        "id": "757966c62152c55a",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Get Scores",
+        "func": "let scores = flow.get(\"scores\") || {\n    P1: 0,\n    P2: 0,\n    P3: 0\n};\n\nmsg.payload = {\n    success: true,\n    scores: scores,\n    roundLocked: flow.get(\"roundLocked\") || false\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 1160,
+        "wires": [
+            [
+                "91862a080456440e"
+            ]
+        ]
+    },
+    {
+        "id": "91862a080456440e",
+        "type": "http response",
+        "z": "72b54a41227aca2a",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1230,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "425398f68078983f",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Reset All Scores",
+        "func": "let scores = {\n    P1: 0,\n    P2: 0,\n    P3: 0\n};\n\nflow.set(\"scores\", scores);\n\nmsg.payload = scores;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 760,
+        "wires": [
+            [
+                "21b38363a605f9a3",
+                "190b2c798d01e8fe",
+                "6569064ea7fa08d9",
+                "db21b37b840bbb57"
+            ]
+        ]
+    },
+    {
+        "id": "6265cfdc670b9efd",
+        "type": "inject",
+        "z": "72b54a41227aca2a",
+        "name": "Reset Scores Test",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 760,
+        "wires": [
+            [
+                "a82e2f4782b70879"
+            ]
+        ]
+    },
+    {
+        "id": "f563ba1175c3d65c",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "name": "Round Status",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 1220,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "9c2bbb531a6be0c6",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Round Locked Status",
+        "func": "msg.payload = \" الجولة مقفلة - تم تسجيل أول لاعب \";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 420,
+        "wires": [
+            [
+                "f563ba1175c3d65c"
+            ]
+        ]
+    },
+    {
+        "id": "97e14cca3ad9a8e0",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Round Ready Status",
+        "func": "msg.payload = \" الجولة جاهزة - يمكن للاعبين الضغط \";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 500,
+        "wires": [
+            [
+                "f563ba1175c3d65c"
+            ]
+        ]
+    },
+    {
+        "id": "d9a4bf51ae5e72ae",
+        "type": "ui-button",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "name": "Dashboard Reset Round",
+        "label": "بدء جولة جديدة",
+        "order": 12,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "03",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 270,
+        "y": 500,
+        "wires": [
+            [
+                "eda118db274e4d79"
+            ]
+        ]
+    },
+    {
+        "id": "a82e2f4782b70879",
+        "type": "ui-button",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "name": "Dashboard Reset Scores",
+        "label": "تصفير النتائج",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "reset_scores",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 590,
+        "y": 760,
+        "wires": [
+            [
+                "425398f68078983f"
+            ]
+        ]
+    },
+    {
+        "id": "8028a1b6382dd09f",
+        "type": "http in",
+        "z": "72b54a41227aca2a",
+        "name": "Reset Round API",
+        "url": "/api/reset-round",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 640,
+        "wires": [
+            [
+                "e2e557cf1263a91b"
+            ]
+        ]
+    },
+    {
+        "id": "e2e557cf1263a91b",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "API Reset Round",
+        "func": "flow.set(\"roundLocked\", false);\n\nmsg.payload = {\n    success: true,\n    message: \"Round reset successfully\",\n    //حالة الجولة غير مقفوله\n    roundLocked: false\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 640,
+        "wires": [
+            [
+                "e052088121fe5f35",
+                "d9fe473f0dd02692"
+            ]
+        ]
+    },
+    {
+        "id": "d9fe473f0dd02692",
+        "type": "http response",
+        "z": "72b54a41227aca2a",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "61e7867d2c2949f5",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 34",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e9d05f69d9f5670c",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 35",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "21b38363a605f9a3",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 36",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "6569064ea7fa08d9",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "Player 2 Score",
+        "label": "Player 2 Score",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": true,
+        "className": "",
+        "value": "payload.P2",
+        "valueType": "msg",
+        "x": 1700,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "db21b37b840bbb57",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "name": "Player 3 Score",
+        "label": "Player 3 Score",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": true,
+        "className": "",
+        "value": "payload.P3",
+        "valueType": "msg",
+        "x": 1700,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "9beb1883642ad027",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "name": "First Player Display",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": true,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 970,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "11d47a9251596f78",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Questions",
+        "func": "let questions = [\n\n    // السؤال 1\n    {\n        q: \"السؤال الأول ما هو نظام التشغيل مفتوح المصدر؟\",\n        A: \"Windows\",\n        B: \"macOS\",\n        C: \"iOS\",\n        D: \"Linux\",\n        correct: \"D\"\n    },\n\n    // السؤال 2\n    {\n        q: \"السؤال الثاني أي لغة برمجة تستخدم لتطوير تطبيقات Android؟\",\n        A: \"Python\",\n        B: \"Swift\",\n        C: \"Java\",\n        D: \"PHP\",\n        correct: \"C\"\n    },\n\n    // السؤال 3\n    {\n        q: \"السؤال الثالث ما هي لغة ترميز النصوص التشعبية؟\",\n        A: \"HTML\",\n        B: \"JavaScript\",\n        C: \"CSS\",\n        D: \"PHP\",\n        correct: \"A\"\n    },\n\n    // السؤال 4\n    {\n        q: \"السؤال الرابع أي من هذه ليست لغة برمجة؟\",\n        A: \"Python\",\n        B: \"Java\",\n        C: \"HTML\",\n        D: \"C++\",\n        correct: \"C\"\n    },\n\n    // السؤال 5\n    {\n        q: \"السؤال الخامس ما هو بروتوكول نقل النص التشعبي؟\",\n        A: \"FTP\",\n        B: \"HTTP\",\n        C: \"SMTP\",\n        D: \"SSH\",\n        correct: \"B\"\n    },\n\n    // السؤال 6\n    {\n        q: \"السؤال السادس أي من هذه قواعد بيانات علائقية؟\",\n        A: \"MongoDB\",\n        B: \"MySQL\",\n        C: \"Redis\",\n        D: \"Firebase\",\n        correct: \"B\"\n    },\n\n    // السؤال 7\n    {\n        q: \"السؤال السابع ما هو الـ IP المعروف باسم localhost؟\",\n        A: \"192.168.1.1\",\n        B: \"10.0.0.1\",\n        C: \"127.0.0.1\",\n        D: \"172.16.0.1\",\n        correct: \"C\"\n    },\n\n    // السؤال 8\n    {\n        q: \"السؤال الثامن أي من هذه ليس نظام تشغيل للهواتف؟\",\n        A: \"iOS\",\n        B: \"Android\",\n        C: \"Windows Phone\",\n        D: \"Linux Desktop\",\n        correct: \"D\"\n    },\n\n    // السؤال 9\n    {\n        q: \"السؤال التاسع تستخدم لغة الـ CSS لـ؟\",\n        A: \"تصميم الواجهات\",\n        B: \"البرمجة المنطقية\",\n        C: \"قواعد البيانات\",\n        D: \"الذكاء الاصطناعي\",\n        correct: \"A\"\n    },\n\n    // السؤال 10\n    {\n        q: \"السؤال العاشر أي من هذه ليس لغة برمجة نصية؟\",\n        A: \"JavaScript\",\n        B: \"Python\",\n        C: \"PHP\",\n        D: \"C#\",\n        correct: \"D\"\n    },\n\n    // السؤال 11\n    {\n        q: \"السؤال الحادي عشر ما هو بروتوكول البريد الإلكتروني؟\",\n        A: \"SMTP\",\n        B: \"HTTP\",\n        C: \"FTP\",\n        D: \"TCP\",\n        correct: \"A\"\n    },\n\n    // السؤال 12\n    {\n        q: \"السؤال الثاني عشر أي من هذه هو إطار عمل جافا سكريبت؟\",\n        A: \"React\",\n        B: \"Django\",\n        C: \"Laravel\",\n        D: \"Spring\",\n        correct: \"A\"\n    },\n\n    // السؤال 13\n    {\n        q: \"السؤال الثالث عشر ما هي وحدة المعالجة المركزية؟\",\n        A: \"الذاكرة\",\n        B: \"القرص الصلب\",\n        C: \"المعالج\",\n        D: \"كارت الشاشة\",\n        correct: \"C\"\n    },\n\n    // السؤال 14\n    {\n        q: \"السؤال الرابع عشر أي من هذه ليس نوع من الذاكرة؟\",\n        A: \"RAM\",\n        B: \"ROM\",\n        C: \"CPU\",\n        D: \"Cache\",\n        correct: \"C\"\n    },\n\n    // السؤال 15\n    {\n        q: \"السؤال الخامس عشر ما هو الـ DNS؟\",\n        A: \"خادم أسماء النطاقات\",\n        B: \"بروتوكول نقل\",\n        C: \"لغة برمجة\",\n        D: \"نظام تشغيل\",\n        correct: \"A\"\n    },\n\n    // السؤال 16\n    {\n        q: \"السؤال السادس عشر أي من هذه يستخدم للتحكم بالإصدارات؟\",\n        A: \"Git\",\n        B: \"Docker\",\n        C: \"Kubernetes\",\n        D: \"Jenkins\",\n        correct: \"A\"\n    },\n\n    // السؤال 17\n    {\n        q: \"السؤال السابع عشر ما هو نظام التشغيل من Apple؟\",\n        A: \"Windows\",\n        B: \"Linux\",\n        C: \"macOS\",\n        D: \"Android\",\n        correct: \"C\"\n    },\n\n    // السؤال 18\n    {\n        q: \"السؤال الثامن عشر أي من هذه ليس نوع من قواعد البيانات؟\",\n        A: \"علائقية\",\n        B: \"وثائقية\",\n        C: \"بيانية\",\n        D: \"خطية\",\n        correct: \"D\"\n    },\n\n    // السؤال 19\n    {\n        q: \"السؤال التاسع عشر ما هو الـ API؟\",\n        A: \"واجهة برمجة التطبيقات\",\n        B: \"لغة برمجة\",\n        C: \"نظام تشغيل\",\n        D: \"خادم ويب\",\n        correct: \"A\"\n    },\n\n    // السؤال 20\n    {\n        q: \"السؤال العشرون أي من هذه هو نظام إدارة محتوى؟\",\n        A: \"WordPress\",\n        B: \"React\",\n        C: \"Angular\",\n        D: \"Node.js\",\n        correct: \"A\"\n    }\n\n];\n\n\n// ==============================\n// بدء الأسئلة\n// ==============================\nif (msg.payload === \"START\") {\n\n    flow.set(\"questionsStarted\", true);\n    flow.set(\"questionIndex\", 0);\n\n}\n\n\nif (flow.get(\"questionsStarted\") !== true) {\n\n    msg.payload = \"\";\n    return msg;\n\n}\n\n\n// ==============================\n// معرفة رقم السؤال الحالي\n// ==============================\nlet index = flow.get(\"questionIndex\") || 0;\n\n\n// ==============================\n// انتهاء جميع الأسئلة\n// ==============================\nif (index >= questions.length) {\n\n    flow.set(\"questionsStarted\", false);\n\n    msg.payload = \"انتهت الأسئلة 🎉\";\n\n    return msg;\n\n}\n\n\n// ==============================\n// الحصول على السؤال الحالي\n// ==============================\nlet item = questions[index];\n\n\n// ==============================\n// عرض السؤال\n// السؤال في سطر\n// الإجابات في السطر التالي\n// ==============================\nmsg.payload =\n    \"<div style='text-align:right; width:100%; font-size:22px; font-weight:bold;'>\" +\n    item.q +\n    \"</div>\" +\n    \"<div style='margin-top:15px;'>\" +\n    \"A: \" + item.A + \"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\" +\n    \"B: \" + item.B + \"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\" +\n    \"C: \" + item.C + \"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\" +\n    \"D: \" + item.D +\n    \"</div>\";\n\n\n// ==============================\n// حفظ الإجابة الصحيحة للسؤال الحالي\n// ==============================\nflow.set(\"correctAnswer\", item.correct);\nnode.warn(\"Correct Answer = \" + item.correct);\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 960,
+        "wires": [
+            [
+                "c434f115778f34b7",
+                "8cbc263ecedffdc9"
+            ]
+        ]
+    },
+    {
+        "id": "037c7a51d569bc2d",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Check Answer",
+        "func": "let answer = String(msg.payload).trim();\n\nlet correctAnswer = flow.get(\"correctAnswer\");\n\nif (answer === correctAnswer) {\n\n    msg.payload = \"✅ الإجابة صحيحة\";\n\n} else {\n\n    msg.payload = \"❌ الإجابة خاطئة\";\n\n}\n\nreturn [msg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 920,
+        "wires": [
+            [
+                "b26cdedfdb493a01",
+                "73721bf4264b2f68"
+            ],
+            [
+                "11d47a9251596f78"
+            ]
+        ]
+    },
+    {
+        "id": "71d4ca747fd5624b",
+        "type": "ui-button",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "name": "Answer A",
+        "label": "A",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "A",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 220,
+        "y": 840,
+        "wires": [
+            [
+                "037c7a51d569bc2d"
+            ]
+        ]
+    },
+    {
+        "id": "86f5fcd93ffc34b2",
+        "type": "ui-button",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "name": "Answer B",
+        "label": "B",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "B",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 220,
+        "y": 900,
+        "wires": [
+            [
+                "037c7a51d569bc2d"
+            ]
+        ]
+    },
+    {
+        "id": "1c46a63a551b31b0",
+        "type": "ui-button",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "name": "Answer C",
+        "label": "C",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "C",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 220,
+        "y": 960,
+        "wires": [
+            [
+                "037c7a51d569bc2d"
+            ]
+        ]
+    },
+    {
+        "id": "5fcdd2d2979ae531",
+        "type": "ui-button",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "name": "Answer D",
+        "label": "D",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "D",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 220,
+        "y": 1020,
+        "wires": [
+            [
+                "037c7a51d569bc2d"
+            ]
+        ]
+    },
+    {
+        "id": "c434f115778f34b7",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Question Display",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": true,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 1270,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "db241eda5b2ad3d6",
+        "type": "inject",
+        "z": "72b54a41227aca2a",
+        "name": "Start Questions",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "START",
+        "payloadType": "str",
+        "x": 580,
+        "y": 820,
+        "wires": [
+            [
+                "b26cdedfdb493a01",
+                "11d47a9251596f78"
+            ]
+        ]
+    },
+    {
+        "id": "b26cdedfdb493a01",
+        "type": "ui-text",
+        "z": "72b54a41227aca2a",
+        "group": "0851430a4244eecb",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "Answer Result",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 940,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "73721bf4264b2f68",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 37",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "47883a09cf364adc",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Clear Answer Result",
+        "func": "msg.payload = \"\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1720,
+        "y": 1020,
+        "wires": [
+            [
+                "11d47a9251596f78",
+                "b26cdedfdb493a01"
+            ]
+        ]
+    },
+    {
+        "id": "8cbc263ecedffdc9",
+        "type": "trigger",
+        "z": "72b54a41227aca2a",
+        "name": "Question Timer 20s",
+        "op1": "",
+        "op2": "NEXT",
+        "op1type": "nul",
+        "op2type": "str",
+        "duration": "20",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 1250,
+        "y": 1060,
+        "wires": [
+            [
+                "fcaaf035963c6e25",
+                "b26cdedfdb493a01"
+            ]
+        ]
+    },
+    {
+        "id": "fcaaf035963c6e25",
+        "type": "function",
+        "z": "72b54a41227aca2a",
+        "name": "Next Question",
+        "func": "let index = flow.get(\"questionIndex\") || 0;\nindex++;\nflow.set(\"questionIndex\", index);\n\nmsg.payload = \"NEXT\";\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 1060,
+        "wires": [
+            [
+                "47883a09cf364adc"
+            ],
+            [
+                "53ec22c36cc12989"
+            ]
+        ]
+    },
+    {
+        "id": "53ec22c36cc12989",
+        "type": "debug",
+        "z": "72b54a41227aca2a",
+        "name": "debug 38",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1680,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "c4575839817bb6d1",
+        "type": "mqtt-broker",
+        "name": "Quiz MQTT Broker",
+        "broker": "127.0.0.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "0851430a4244eecb",
+        "type": "ui-group",
+        "name": "Quiz Game",
+        "page": "45989f2a9f068c07",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "45989f2a9f068c07",
+        "type": "ui-page",
+        "name": "Quiz Game",
+        "ui": "484a7449355702a4",
+        "path": "/quiz",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "3b10a9b45f851c48",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "484a7449355702a4",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "dashpage",
+        "navigationStyle": "default",
+        "titleBarStyle": "fixed",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": true
+    },
+    {
+        "id": "3b10a9b45f851c48",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#976a9a",
+            "primary": "#d28ecc",
+            "bgPage": "#f3d1f5",
+            "groupBg": "#dfb6e2",
+            "groupOutline": "#f2d2f9"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "64cdcd638ec0cc4b",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.30.2"
+        }
+    }
+]
